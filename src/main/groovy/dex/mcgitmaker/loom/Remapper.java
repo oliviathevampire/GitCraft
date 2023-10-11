@@ -43,6 +43,7 @@ public class Remapper {
 
 			TinyRemapper remapper = remapperBuilder.build();
 			remapper.readInputs(mcVersion.merged().toPath());
+
 			try (OutputConsumerPath consumer = new OutputConsumerPath.Builder(output).build()) {
 				remapper.apply(consumer, remapper.createInputTag());
 			}

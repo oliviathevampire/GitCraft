@@ -1,8 +1,5 @@
 package dex.mcgitmaker
 
-
-import net.fabricmc.loader.api.SemanticVersion
-
 class McMetadataTest {
     static void main(String[] args) {
         //def x = new GitCraft()

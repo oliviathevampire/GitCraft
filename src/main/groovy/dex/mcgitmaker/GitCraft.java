@@ -132,8 +132,7 @@ public class GitCraft {
 	RepoManager updateRepo() throws GitAPIException, IOException {
 		RepoManager r = null;
 		if (!config.noRepo) {
-			String identifier = versionGraph.repoTagsIdentifier(GitCraft.config.usedMapping);
-			r = new RepoManager(this.versionGraph, identifier.isEmpty() ? null : MAIN_ARTIFACT_STORE.getParent().resolve(String.format("minecraft-repo-%s", identifier)));
+			r = new RepoManager(this.versionGraph, MAIN_ARTIFACT_STORE.getParent().resolve("minecraft-repo"));
 		}
 		for (McVersion mcv : versionGraph) {
 			if (config.refreshDecompilation) {
