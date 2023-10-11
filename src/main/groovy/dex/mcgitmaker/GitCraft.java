@@ -78,8 +78,9 @@ public class GitCraft {
 		if (GitCraft.config == null) {
 			return;
 		}
+		MiscHelper.checkFabricLoaderVersion();
 		GitCraft gitCraft = new GitCraft();
-		gitCraft.versionGraph = gitCraft.versionGraph.filterMapping(GitCraft.config.usedMapping);
+		gitCraft.versionGraph = gitCraft.versionGraph.filterMapping(GitCraft.config.usedMapping, GitCraft.config.fallbackMappings);
 		if (config.isOnlyVersion()) {
 			if (config.onlyVersion.length == 0) {
 				MiscHelper.panic("No version provided");
@@ -98,6 +99,23 @@ public class GitCraft {
 				MiscHelper.panic("%s is invalid", config.minVersion);
 			}
 			gitCraft.versionGraph = gitCraft.versionGraph.filterMinVersion(mc_version);
+		}
+
+		if (config.isAnyVersionExcluded()) {
+			McVersion[] mc_versions = new McVersion[config.excludedVersion.length];
+			for (int i = 0; i < mc_versions.length; ++i) {
+				mc_versions[i] = gitCraft.versionGraph.getMinecraftMainlineVersionByName(config.excludedVersion[i]);
+				if (mc_versions[i] == null) {
+					MiscHelper.panic("%s is invalid", config.onlyVersion[i]);
+				}
+			}
+			gitCraft.versionGraph = gitCraft.versionGraph.filterExcludeVersion(mc_versions);
+		}
+		if (config.onlyStableReleases) {
+			gitCraft.versionGraph = gitCraft.versionGraph.filterStableRelease();
+		}
+		if (config.onlySnapshots) {
+			gitCraft.versionGraph = gitCraft.versionGraph.filterSnapshots();
 		}
 
 		if (config.skipNonLinear) {
@@ -135,14 +153,15 @@ public class GitCraft {
 			r = new RepoManager(this.versionGraph, MAIN_ARTIFACT_STORE.getParent().resolve("minecraft-repo"));
 		}
 		for (McVersion mcv : versionGraph) {
+			MappingHelper.MappingFlavour versionMapping = GitCraft.config.getMappingsForMinecraftVersion(mcv).orElseThrow();
 			if (config.refreshDecompilation) {
-				refreshDeleteDecompiledJar(mcv, GitCraft.config.usedMapping);
+				refreshDeleteDecompiledJar(mcv, versionMapping);
 			}
 			if (!config.noRepo) {
 				assert r != null;
-				r.commitDecompiled(mcv, GitCraft.config.usedMapping);
+				r.commitDecompiled(mcv, versionMapping);
 			} else {
-				decompileNoRepository(mcv, GitCraft.config.usedMapping);
+				decompileNoRepository(mcv, versionMapping);
 			}
 		}
 		if (!config.noRepo) {
