@@ -40,6 +40,7 @@ public class GitCraftConfig {
 	public String gitUser = "Mojang";
 	public String gitMail = "gitcraft@decompiled.mc";
 	public String gitMainlineLinearBranch = "master";
+    public boolean createVersionBranches = false;
 
 	/// Refresh settings
 	public boolean refreshDecompilation = false;
@@ -61,7 +62,7 @@ public class GitCraftConfig {
 	public String[] excludedVersion = null;
 
 	/// Mapping quirks
-	public static final String MIN_SUPPORTED_FABRIC_LOADER = "0.14.23";
+	public static final String MIN_SUPPORTED_FABRIC_LOADER = "0.15.3";
 
 	public static final SemanticVersion INTERMEDIARY_MAPPINGS_START_VERSION, YARN_MAPPINGS_START_VERSION, YARN_CORRECTLY_ORIENTATED_MAPPINGS_VERSION, PARCHMENT_START_VERSION;
 
@@ -164,6 +165,9 @@ public class GitCraftConfig {
 		if (overrideRepositoryPath != null) {
 			MiscHelper.println("Repository path is overridden. This may lead to various errors (see help). Proceed with caution. Target: %s", overrideRepositoryPath);
 		}
+        if (createVersionBranches) {
+            MiscHelper.println("A seperate branch will be created for each version.");
+        }
 	}
 
 	public boolean isOnlyVersion() {
