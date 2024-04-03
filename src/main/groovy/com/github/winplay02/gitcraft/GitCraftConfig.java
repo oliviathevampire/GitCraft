@@ -22,6 +22,7 @@ public class GitCraftConfig {
 	public boolean loadAssetsExtern = true;
 	public boolean readableNbt = true;
 	public boolean loadDatagenRegistry = true;
+	public boolean sortJsonObjects = false;
 
 	/// Internal options
 	public boolean verifyChecksums = true;
@@ -41,6 +42,7 @@ public class GitCraftConfig {
 	public String gitMail = "gitcraft@decompiled.mc";
 	public String gitMainlineLinearBranch = "master";
     public boolean createVersionBranches = false;
+    public boolean createStableVersionBranches = false;
 
 	/// Refresh settings
 	public boolean refreshDecompilation = false;
@@ -62,7 +64,7 @@ public class GitCraftConfig {
 	public String[] excludedVersion = null;
 
 	/// Mapping quirks
-	public static final String MIN_SUPPORTED_FABRIC_LOADER = "0.15.6";
+	public static final String MIN_SUPPORTED_FABRIC_LOADER = "0.15.9";
 
 	public static final SemanticVersion INTERMEDIARY_MAPPINGS_START_VERSION, YARN_MAPPINGS_START_VERSION, YARN_CORRECTLY_ORIENTATED_MAPPINGS_VERSION, PARCHMENT_START_VERSION;
 
@@ -83,7 +85,7 @@ public class GitCraftConfig {
 
 	public static List<String> yarnMissingVersions = List.of("1.16_combat-1", "1.16_combat-2", "1.16_combat-4", "1.16_combat-5", "1.16_combat-6");
 
-	public static List<String> yarnMissingReuploadedVersions = List.of("23w13a_or_b_original");
+	public static List<String> yarnMissingReuploadedVersions = List.of("23w13a_or_b_original", "24w14potato_original");
 
 	// Maps (version, [broken] build) -> [working] build or -1
 	public static Map<Tuple2<String, Integer>, Integer> yarnBrokenBuildOverride = Map.of(
@@ -109,14 +111,16 @@ public class GitCraftConfig {
 	);
 
 	// There are no releases for these parchment versions (yet)
-	public static List<String> parchmentMissingVersions = List.of("1.18", "1.19", "1.19.1", "1.20", "1.20.3");
+	public static List<String> parchmentMissingVersions = List.of("1.18", "1.19", "1.19.1", "1.20", "1.20.5");
 
 	// Version Override
 	public static Map<String, String> minecraftVersionSemVerOverride = Map.of(
 			// wrongly ordered 1.16 snapshots (pre gets mapped to rc for version 1.16, so there would be to rc1 versions)
 			"1.16-rc1", "1.16-rc.9",
 			// support extra original for 23w13a_or_b
-			"23w13a_or_b_original", "1.20-alpha.23.13.ab.original"
+			"23w13a_or_b_original", "1.20-alpha.23.13.ab.original",
+			// support extra original for 24w14potato...
+			"24w14potato_original", "1.20.5-alpha.24.12.potato.original"
 			// FIX until fabric-loader is updated
 			// END FIX
 	);
@@ -168,6 +172,12 @@ public class GitCraftConfig {
         if (createVersionBranches) {
             MiscHelper.println("A seperate branch will be created for each version.");
         }
+        else if (createStableVersionBranches) {
+            MiscHelper.println("A seperate branch will be created for each stable version.");
+        }
+		if (sortJsonObjects) {
+			MiscHelper.println("JSON files (JSON objects) will be sorted in natural order.");
+		}
 	}
 
 	public boolean isOnlyVersion() {
