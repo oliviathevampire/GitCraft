@@ -19,6 +19,10 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 21
 }
 
+java {
+	toolchain.getLanguageVersion().set(JavaLanguageVersion.of(21))
+}
+
 application {
 	mainClass = 'com.github.winplay02.gitcraft.GitCraft'
 	applicationDefaultJvmArgs = ['-Xmx4G', '-XX:+HeapDumpOnOutOfMemoryError']
