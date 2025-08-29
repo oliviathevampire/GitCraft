@@ -1,1 +1,1 @@
-gradlew run --args="--override-repo-target=minecraft-repo"
+gradlew run --args="--override-repo-target=minecraft-repo" --refresh-dependencies
