@@ -1,0 +1,32 @@
+apply plugin: 'java'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_24
+	targetCompatibility = JavaVersion.VERSION_24
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	it.options.release = 24
+}
+
+jar {
+	manifest {
+		attributes ("Premain-Class": "com.github.winplay02.gitcraft.launchagent.GitCraftAgent")
+	}
+	metadataCharset = "UTF-8"
+	preserveFileTimestamps = false
+	reproducibleFileOrder = true
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
+
+jar.dependsOn(configurations.runtimeClasspath)
+
+project(':').runLauncher {
+	dependsOn jar
+	environment("GITCRAFT_LAUNCH_AGENT", jar.archiveFile.get().getAsFile().getAbsolutePath())
+}
+
+dependencies {}
